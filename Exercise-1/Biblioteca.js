@@ -2,7 +2,13 @@
 // este é um sistema de biblioteca com varios livros onde o user digita no terminal qual livre ele quer pegar e o sistema verifica 
 // se aquele livro esta disponivel ou não, caso ele esteja ele muda o status do livro para false ou indisponivel e exibe a lista de livros
 
-const readline = require("node:readline")
+import readline from 'node:readline';
+import fs from 'node:fs/promises';
+import {criararquivo} from './utils/create.js'
+
+// pelo meu sistema estar usando o type module, não posso usar o require! apenas import e export 
+// quando o codigo rodar pela primeira vez ele cria o arquivo, mas após o arquivo ser criado ele não cria mais nem atualiza
+
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -10,33 +16,22 @@ const rl = readline.createInterface({
 })
 
 const Libraryname = "Biblioteca FortalCity"
-const books = [
-    {
-        nome: "falsini",
-        author: "andrezin",
-        status: false,
-    },
-    {
-        nome: "a lua e as estrelas",
-        author: "Miguel de correia",
-        status: true,
-    },
-    {
-        nome: "Squad o ultimo amanhecer",
-        author: "Saulo Almeida",
-        status: true,
-    },
-    {
-        nome: "Oxigenio 2.0",
-        author: "andrezin",
-        status: false,
-    },
-    {
-        nome: "Oxigenio 2.0: o legado de paz",
-        author: "John willian",
-        status: true,
-    },
-]
+let books = ""
+
+async function inserir() {
+    try {
+   const dados = await fs.readFile('./books.json', 'utf-8');
+//    readfile lé o arquivo e retorna uma promise, que é resolvida com o conteúdo do arquivo, e o utf-8 é usado para ler o arquivo como texto(tranforma-lo em texto), caso não seja passado o utf-8 ele retorna um buffer, que é um objeto que representa uma sequência de bytes, e não é legivel para humanos.
+
+    const data = JSON.parse(dados);
+    // parse transforma o texto em objeto
+
+    books = data
+    } catch (error) {
+        console.error("erro ao ler o arquivo books.json", error)
+    }
+}
+
 
 
 
@@ -60,6 +55,16 @@ function listarLivros() {
     console.log(livrosFormatados)
 }
 
+async function atualizarArquivo() {
+    try {
+        await fs.writeFile('./books.json', JSON.stringify(books, null, 2), 'utf-8');
+        // cria um arquivo ou ele sobrescreve o arquivo já existente, o stringify transforma o objeto em texto, 
+        // já o null, 2 é usado na indentação do arquivo, sem indentação os dados ficariam lado a lado 
+        // com indentação existe um tipo de quebra de linha! 2 define o recuo de 2 espaços para cada nivel de profundidade do objeto.
+    } catch (error) {
+        console.error("erro ao atualizar o arquivo books.json", error)
+    }
+}
 
 console.log(Libraryname)
 
@@ -81,6 +86,8 @@ setTimeout(() => {
 
         if (livroEncontrado) {
                       books[indice].status = false
+
+                      atualizarArquivo()
                     //   o push só serve para colocar um novo elemento, o metodo acima é usado para alterar o valor
 
                        listarLivros()
@@ -96,6 +103,8 @@ setTimeout(() => {
 })
 }, 2000)
 
+criararquivo()
+inserir()
 
 
 
@@ -105,6 +114,7 @@ setTimeout(() => {
 
 
 
+// codigo roda = cria um arquivo, coloca os dados, transforma em array, e é salvo numa variavel chamada books
 
 
 
