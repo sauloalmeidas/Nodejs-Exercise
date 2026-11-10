@@ -1,0 +1,27 @@
+[
+  {
+    "nome": "falsini",
+    "author": "andrezin",
+    "status": true
+  },
+  {
+    "nome": "a lua e as estrelas",
+    "author": "Miguel de correia",
+    "status": true
+  },
+  {
+    "nome": "Squad o ultimo amanhecer",
+    "author": "Saulo Almeida",
+    "status": true
+  },
+  {
+    "nome": "Oxigenio 2.0",
+    "author": "andrezin",
+    "status": true
+  },
+  {
+    "nome": "Oxigenio 2.0: o legado de paz",
+    "author": "John willian",
+    "status": true
+  }
+]
